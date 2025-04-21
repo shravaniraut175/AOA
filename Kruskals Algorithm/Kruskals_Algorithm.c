@@ -4,8 +4,8 @@ struct Edge {
     int src, dest, weight;
 };
 
-int n, m, i, j;
 struct Edge edges[20], result[20];
+int n, m, i, j;
 int parent[20];
 
 void kruskalMST();
@@ -41,18 +41,18 @@ void unionSets(int u, int v) {
 
 // Function to implement Kruskal's Algorithm
 void kruskalMST() {
-    struct Edge temp;
+    struct Edge key;
     int cost = 0, edgeCount = 0;
 
-    // Sort edges in ascending order of weight (Simple Bubble Sort)
-    for (i = 0; i < m - 1; i++) {
-        for (j = 0; j < m - i - 1; j++) {
-            if (edges[j].weight > edges[j + 1].weight) {
-                temp = edges[j];
-                edges[j] = edges[j + 1];
-                edges[j + 1] = temp;
-            }
+    // Sort edges in ascending order of weight (Insertion Sort)
+    for (i = 1; i < m; i++) {
+        key = edges[ i];
+        j = i - 1;
+        while (j >= 0 && edges[j].weight > key.weight) {
+            edges[j + 1] = edges[j];
+            j = j - 1;
         }
+        edges[j + 1] = key;
     }
 
     // Initialize disjoint sets
@@ -66,7 +66,6 @@ void kruskalMST() {
     for (i = 0; i < m && edgeCount < n - 1; i++) {
         int u = find(edges[i].src);
         int v = find(edges[i].dest);
-
         if (u != v) {
             result[edgeCount++] = edges[i];
             unionSets(u, v);
@@ -74,6 +73,6 @@ void kruskalMST() {
             printf("%d - %d\t%d\n", edges[i].src, edges[i].dest, edges[i].weight);
         }
     }
-
+    
     printf("Total Minimum Cost: %d\n", cost);
 }
